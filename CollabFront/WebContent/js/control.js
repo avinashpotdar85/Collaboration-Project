@@ -91,8 +91,9 @@ letzChaat.config(function($routeProvider) {
 	{
 		templateUrl:"userHome.html",
 		controller:'userHomeController'
-	})*/
-	.when("/jobs",
+	})
+	*/
+			.when("/jobs",
 	{
 		templateUrl:"jobs.html",
 		controller:'jobsController'
@@ -112,10 +113,23 @@ letzChaat.config(function($routeProvider) {
 		templateUrl:"adminJobs.html",
 		controller:'adminjobsController'
 	})
+	
+		.when("/adminForum",
+	{
+		templateUrl:"adminForum.html",
+		controller:'adminForumController'
+	})
+
 	.when("/forum",
 	{
 		templateUrl:"forum.html",
 		controller:'forumController'
+	})
+	
+	.when("/chat",
+	{
+		templateUrl:"chat.html",
+		controller:'ChatCtrl'
 	})
 });
 letzChaat.controller('mainController',function($scope)		
@@ -141,6 +155,9 @@ letzChaat.controller('logoutController',function($scope,$rootScope,$http)
 			$rootScope.logout=false;
 			$rootScope.chat=false;
 			$rootScope.adminBlog=false;
+			$rootScope.adminEvent=false;
+			$rootScope.adminJobs=false;
+
 			$rootScope.users=false;
 			
 			
@@ -242,7 +259,7 @@ letzChaat.controller('registerController',function($scope,$http)
 		}
 		);
 
-
+/*
 letzChaat.controller("adminJobsController",function($scope,$http,$rootScope)
 {
 	 $rootScope.login=false;
@@ -263,7 +280,7 @@ letzChaat.controller("adminJobsController",function($scope,$http,$rootScope)
 	    .then(function (response) {$scope.jobs = response.data;});
 	   
 });
-
+*/
 
 letzChaat.controller("adminBlogController",function($scope,$http,$rootScope)	
 		{	
@@ -273,6 +290,7 @@ letzChaat.controller("adminBlogController",function($scope,$http,$rootScope)
 	$rootScope.about=false;
 	$rootScope.home=false;
 	$rootScope.adminBlog=true;
+	$rootScope.adminEvent=true;
 	$rootScope.users=true;
 	$rootScope.registeredUsers=true;
 	$rootScope.logout=true;
@@ -635,15 +653,6 @@ letzChaat.controller('servicesController',function($scope)
 
 
 
-
-
-
-
-letzChaat.controller('forumController',function($scope)		
-		{
-			$scope.message="you are in forum page";
-		}
-		);
 letzChaat.controller('userHomeController',function($scope,$rootScope)		
 		{
 			$rootScope.event=true;
@@ -660,6 +669,7 @@ letzChaat.controller('adminController',function($scope,$rootScope)
 			console.log("admin Controller  called");
 		
 			
+			$rootScope.adminForum=true;
 			$rootScope.adminJobs=true;
 			$rootScope.adminEvent=true;
 			$rootScope.adminBlog=true;
@@ -873,3 +883,192 @@ letzChaat.controller('adminjobsController',function($scope,$http)
 
        
 		);
+
+
+
+
+letzChaat.controller("forumController",function($scope,$http,$rootScope)	
+		{	
+	
+	console.log("i am in forumController");
+	console.log("after this");
+			 $http.get("http://localhost:8081/Collaboration/viewForums")
+			    .then(function (response) {
+			    	
+			    	$scope.forums = response.data;
+			    	
+			    	console.log("data:"+response.data);
+			    });
+			$scope.newForum={};
+			console.log("In Controller");
+			$scope.addForum=function(newForum)
+			{
+				var dataObj = {
+						forumId:$scope.forumId,
+						name:$scope.name,
+						topic:$scope.topic,
+						description:$scope.description,
+						userID:$scope.userID,
+						dateOfCreation:$scope.dateOfCreation,
+						/*content:$scope.content,
+						category:$scope.category*/
+		 		};
+				console.log("title:"+dataObj);
+				 var res = $http.post('http://localhost:8081/Collaboration/addForum',dataObj);
+				 $http.get("http://localhost:8081/Collaboration/viewForums")
+			 	    .then(function (response) {$scope.forums = response.data;});
+			 		res.success(function(data, status, headers, config) {
+			 			$scope.message = data;
+			 			console.log("status:"+status);
+			 		});
+			 		 
+			};
+			$scope.editForum=function(forum)
+			{
+				console.log("inside editforum");
+				console.log("forum:"+forum);
+				$scope.forumDataToEdit=forum;
+			}
+			$scope.saveEdit=function()
+			{
+				var dataObj = {
+						
+						forumId:$scope.forumDataToEdit.forumId,
+						name:$scope.forumDataToEdit.name,
+						topic:$scope.forumDataToEdit.topic,
+						description:$scope.forumDataToEdit.description,
+						userID:$scope.forumDataToEdit.userID,
+						dateOfCreation:$scope.forumDataToEdit.dateOfCreation,
+						
+		 				
+		 		};
+				$http.put('http://localhost:8081/Collaboration/updateForum', dataObj);
+				$http.get("http://localhost:8081/Collaboration/viewForums")
+		 	    .then(function (response) {$scope.forums = response.data;});
+			}
+			$scope.deleteForum=function(forumDataToEdit)
+			{
+				console.log("delete user forum called");
+				forumId:$scope.forumDataToEdit.forumId;
+				console.log("forumId:"+forumDataToEdit.forumId);
+				$http['delete']('http://localhost:8081/Collaboration/deleteForum/'+forumDataToEdit.forumId);
+				 $http.get("http://localhost:8081/Collaboration/viewForums")
+			 	    .then(function (response) {$scope.forums = response.data;});
+			}
+			
+		
+
+		
+});
+
+
+
+
+
+
+
+
+
+
+
+
+letzChaat.controller("adminForumController",function($scope,$http,$rootScope)	
+		{	
+	$rootScope.login=false;
+	$rootScope.register=false;
+	$rootScope.services=false;
+	$rootScope.about=false;
+	$rootScope.home=false;
+	$rootScope.adminForum=true;
+	$rootScope.users=true;
+	$rootScope.registeredUsers=true;
+	$rootScope.logout=true;
+	$rootScope.adminJobs=true;
+	console.log("i am in adminforum controller");
+	console.log("after this");
+			 $http.get("http://localhost:8081/Collaboration/viewForums")
+			    .then(function (response) {
+			    	
+			    	$scope.forums = response.data;
+			    	
+			    	console.log("data:"+response.data);
+			    });
+			$scope.newForum={};
+			console.log("In Controller");
+			$scope.addForum=function(newForum)
+			{
+				var dataObj = {
+						forumId:$scope.forumId,
+						title:$scope.title,
+						description:$scope.	description,
+
+						usersID:$scope.usersID,
+						forumDate:$scope.forumDate,
+						venue:$scope.venue,
+							};
+				console.log("title:"+dataObj);
+				 var res = $http.post('http://localhost:8081/Collaboration/addForum',dataObj);
+				 $http.get("http://localhost:8081/Collaboration/viewForums")
+			 	    .then(function (response) {$scope.forums = response.data;});
+			 		res.success(function(data, status, headers, config) {
+			 			$scope.message = data;
+			 			console.log("status:"+status);
+			 		});
+			 		 
+			};
+			$scope.editForum=function(forum)
+			{
+				console.log("inside editforum");
+				console.log("forum:"+forum);
+				$scope.forumDataToEdit=forum;
+			}
+			$scope.saveEdit=function()
+			{
+				var dataObj = {
+						
+						forumId:$scope.forumDataToEdit.forumId,
+						name:$scope.forumDataToEdit.name,
+						topic:$scope.forumDataToEdit.topic,
+						description:$scope.forumDataToEdit.description,
+						userID:$scope.forumDataToEdit.userID,
+						dateOfCreation:$scope.forumDataToEdit.dateOfCreation,
+						
+		 		};
+				$http.put('http://localhost:8081/Collaboration/updateForum', dataObj);
+				$http.get("http://localhost:8081/Collaboration/viewForums")
+		 	    .then(function (response) {$scope.forums = response.data;});
+			}
+			$scope.deleteForum=function(forumDataToEdit)
+			{
+				console.log("delete forum called");
+				forumId:$scope.forumDataToEdit.forumId;
+				console.log("forumId:"+forumDataToEdit.forumId);
+				$http['delete']('http://localhost:8081/Collaboration/deleteForum/'+forumDataToEdit.forumId);
+				/*$http.DELETE('http://localhost:8081/Collaboration/deleteForum/'+forumDataToEdit.forumId);*/
+				 $http.get("http://localhost:8081/Collaboration/viewForums")
+			 	    .then(function (response) {$scope.forums = response.data;});
+			}
+			
+		}
+
+		);
+
+letzChaat.controller("ChatCtrl", function($scope, ChatService) {
+	  $scope.messages = [];
+	  $scope.message = "";
+	  $scope.max = 140;
+console.log("inside chat conrll");
+	  $scope.addMessage = function() {
+	    ChatService.send($scope.message);
+	    $scope.message = "";
+	  };
+
+	  ChatService.receive().then(null, null, function(message) {
+	    $scope.messages.push(message);
+	  });
+	});
+
+
+
+
+
