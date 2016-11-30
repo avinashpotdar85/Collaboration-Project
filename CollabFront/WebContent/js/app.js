@@ -1,7 +1,7 @@
-angular.module("chatApp", [
-  "Collaboration.control",
+angular.module("Collaboration", [
+  "Collaboration.controllers",
   "Collaboration.services"
 ]);
 
-angular.module("Collaboration.control", []);
+angular.module("Collaboration.controllers", []);
 angular.module("Collaboration.services", []);
