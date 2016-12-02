@@ -1,9 +1,22 @@
+
 cHAT pAGE
+
+<head>
+<style>
+body {
+ 
+    background:url('images/mail.gif') repeat-y 100% 100% fixed; 
+    height:200%;
+    width:200%;
+}</style>
+</head>
+
+
 <body ng-app="Collaboration">
 <br>
 <br>
 <br>
-<div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+<!-- <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
                 <ul class="nav navbar-nav">
                     
                     <li>
@@ -11,7 +24,7 @@ cHAT pAGE
                     </li>
                 </ul>
 </div>
-<br><br><br><br>
+ -->
 
 	<div ng-controller="ChatCtrl" class="container">
       <form ng-submit="addMessage()" name="messageForm">
@@ -20,7 +33,7 @@ cHAT pAGE
           <span class="count" ng-bind="max - message.length" ng-class="{danger: message.length > max}">140</span>
           <br><br>
       
-          <button ng-disabled="message.length > max || message.length === 0">Send</button>
+          <button ng-disabled="message.length > max || message.length === 0" >Send</button>
         </div>
       </form>
       <hr />
@@ -39,3 +52,15 @@ cHAT pAGE
     <script src="js/controllers.js" type="text/javascript"></script>
     <script src="js/services.js" type="text/javascript"></script>
     </body>
+    
+    
+    
+    
+    
+   
+    
+ <!--    body {
+    background:url('folder/image.gif') repeat-y 100% 100% fixed;
+    height:100%;
+    width:100%;
+} -->
